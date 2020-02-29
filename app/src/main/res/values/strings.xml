@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Ahoy</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="label_sign_in">SignIn</string>
+    <string name="label_sign_up">SignUp</string>
+    <string name="label_password_recovery">Password recovery</string>
+    <string name="label_login">Login</string>
 </resources>
