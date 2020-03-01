@@ -6,4 +6,10 @@
     <string name="label_sign_up">SignUp</string>
     <string name="label_password_recovery">Password recovery</string>
     <string name="label_login">Login</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_repeated_password">Repeat password</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="hint_login">Login</string>
+    <string name="email_password_reset_sent">Email to reset password successfully sent</string>
 </resources>
