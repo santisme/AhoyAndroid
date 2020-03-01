@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="24dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/inputName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="top"
+        android:hint="@string/hint_name"
+        android:minHeight="52dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColorHint="@color/colorAhoyGray"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/inputUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="top"
+        android:hint="@string/hint_username"
+        android:minHeight="52dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColorHint="@color/colorAhoyGray"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/inputEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="top"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:minHeight="52dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColorHint="@color/colorAhoyGray"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/inputPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="top"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"
+        android:minHeight="52dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColorHint="@color/colorAhoyGray"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/inputRepeatedPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="top"
+        android:hint="@string/hint_repeated_password"
+        android:inputType="textPassword"
+        android:minHeight="52dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColorHint="@color/colorAhoyGray"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
+        android:background="@drawable/round_corners_button"
+        android:text="@string/label_sign_up"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/label_sign_in"
+        android:textAllCaps="true"
+        android:textColor="@color/colorAhoyGray"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelPasswordRecovery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/label_password_recovery"
+        android:textAllCaps="true"
+        android:textColor="@color/colorAhoyGray"
+        android:textSize="14sp" />
+
+</LinearLayout>
