@@ -1,53 +1,37 @@
 package io.santisme.ahoy.sources.data.repositories.local
 
-class LocalRepository {
-    companion object {
-        lateinit var factory: LocalRepository
+import android.content.Context
+import io.santisme.ahoy.BuildConfig
+import io.santisme.ahoy.domain.models.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.SignInModel
+import io.santisme.ahoy.domain.models.SignUpModel
+import io.santisme.ahoy.domain.requests.PasswordRecoveryRequest
+import io.santisme.ahoy.domain.requests.SignInRequest
+import io.santisme.ahoy.domain.requests.SignUpRequest
+import io.santisme.ahoy.domain.responses.PasswordRecoveryResponse
+import io.santisme.ahoy.domain.responses.SignUpResponse
+import io.santisme.ahoy.sources.data.repositories.protocols.PasswordRecoveryProtocol
+import io.santisme.ahoy.sources.data.repositories.protocols.SignInRepositoryProtocol
+import io.santisme.ahoy.sources.data.repositories.protocols.SignUpRepositoryProtocol
+import io.santisme.ahoy.sources.networking.APIProvider
+import retrofit2.Response
+
+object LocalRepository : SignInRepositoryProtocol, SignUpRepositoryProtocol,
+    PasswordRecoveryProtocol {
+
+    override suspend fun signIn(signInModel: SignInModel): Response<SignInModel> {
+        return APIProvider.retrofit.create(SignInRequest::class.java).signIn(
+            username = signInModel.username,
+            headerUsername = signInModel.username
+        )
     }
 
-    init {
-        factory = this
+    override suspend fun signUp(signUpModel: SignUpModel): Response<SignUpResponse> {
+        return APIProvider.retrofit.create(SignUpRequest::class.java).signUp(request = signUpModel, headerUsername = BuildConfig.DiscourseAdmin)
     }
-//    public static val factory = LocalRepository()
+
+    override suspend fun recoverPassword(passwordRecoveryModel: PasswordRecoveryModel): Response<PasswordRecoveryResponse> {
+        return APIProvider.retrofit.create(PasswordRecoveryRequest::class.java).recoverPassword(request = passwordRecoveryModel, headerUsername = BuildConfig.DiscourseAdmin)
+    }
+
 }
-
-//// Public class to get a repository
-//final class Repository {
-//    static let factory = LocalRepository()
-//}
-//
-//final class LocalRepository {
-//}
-//
-//extension LocalRepository: SignUpRepositoryProtocol {
-//    func signUp(signUpModel: SignUpModel, completion: @escaping (Result<SignUpResponse, Error>) -> ()) {
-//        let apiSession = APISession()
-//        let signUpRepository = SignUpRepository(apiSession: apiSession)
-//
-//        signUpRepository.signUp(signUpModel: signUpModel) {
-//            completion($0)
-//        }
-//    }
-//}
-//
-//extension LocalRepository: SignInRepositoryProtocol {
-//    func signIn(signInModel: SignInModel, completion: @escaping (Result<SignInResponse, Error>) -> ()) {
-//        let apiSession = APISession()
-//        let signInRepository = SignInRepository(apiSession: apiSession)
-//
-//        signInRepository.signIn(signInModel: signInModel) {
-//            completion($0)
-//        }
-//    }
-//}
-//
-//extension LocalRepository: PasswordRecoveryRepositoryProtocol {
-//    func resetPassword(passwordRecoveryModel: PasswordRecoveryModel, completion: @escaping (Result<PasswordRecoveryResponse, Error>) -> ()) {
-//        let apiSession = APISession()
-//        let passwordRecoveryRepository = PasswordRecoveryRepository(apiSession: apiSession)
-//
-//        passwordRecoveryRepository.resetPassword(passwordRecoveryModel: passwordRecoveryModel) {
-//            completion($0)
-//        }
-//    }
-//}
