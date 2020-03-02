@@ -1,12 +1,18 @@
 package io.santisme.ahoy.sources.login
 
-import io.santisme.ahoy.R
 import io.santisme.ahoy.domain.models.PasswordRecoveryModel
 import io.santisme.ahoy.domain.models.SignInModel
 import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.sources.data.repositories.local.LocalRepository
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class LoginActivityModelView(private val view: LoginActivityModelViewProtocol) :
-    SignInViewControllerDelegate {
+class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) :
+    SignInViewControllerDelegate, CoroutineScope {
+
+    private val job: CompletableJob = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     companion object {
         enum class SignModelError(error: String) {
@@ -22,53 +28,109 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol) :
 //        if (userRepo.isLogged()) {
 //        view?.launchTopicsActivity()
 //        } else {
-        view.navigateToSignIn()
+        view?.navigateToSignIn()
 //        }
     }
 
     override fun signInClicked(signInModel: SignInModel) {
         val result = signInModelIsValid(signInModel = signInModel)
         if (result == null) {
-            view.launchMainActivity()
+//            view?.enableLoading(true)
+
+            val job = async {
+                LocalRepository.signIn(signInModel = signInModel)
+
+            }
+
+            launch(Dispatchers.Main) {
+                val response = job.await()
+
+//                view?.enableLoading(false)
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }?.let {
+                        //                        LocalRepository.saveSession(signInModel.username)
+                        view?.launchMainActivity()
+                    }
+                        ?: run { view?.showError(message = "Body is null") }
+                } else {
+                    view?.showError(message = "Username ${signInModel.username} not found")
+                }
+            }
         } else {
-            view.showError(message = result.toString())
+            view?.showError(message = result.toString())
         }
     }
 
     override fun signInClicked() {
-        view.navigateToSignIn()
+        view?.navigateToSignIn()
     }
 
     override fun navigateToSignUp() {
-        view.navigateToSignUp()
+        view?.navigateToSignUp()
     }
 
     override fun signUpClicked(signUpModelWrapper: SignUpModelWrapper) {
         val result = signUpModelIsValid(signUpModelWrapper = signUpModelWrapper)
         if (result == null) {
-            view.launchMainActivity()
+            val job = async {
+                LocalRepository.signUp(signUpModel = signUpModelWrapper.signUpModel)
+
+            }
+
+            launch(Dispatchers.Main) {
+                val response = job.await()
+
+//                view?.enableLoading(false)
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }?.let {
+                        view?.navigateToSignIn()
+                    }
+                        ?: run { view?.showError(message = "Body is null") }
+                } else {
+                    view?.showError(message = response.message().toString())
+                }
+            }
         } else {
-            view.showError(message = result.toString())
+            view?.showError(message = result.toString())
         }
     }
 
     override fun buttonPasswordRecovery(passwordRecoveryModel: PasswordRecoveryModel) {
         val result = passwordRecoveryModelIsValid(passwordRecoveryModel = passwordRecoveryModel)
         if (result == null) {
-            // TODO: - Implement password recovery request to remote API
-            view.showSuccess(message = "Email to reset password successfully sent")
-            view.navigateToSignIn()
+            val job = async {
+                LocalRepository.recoverPassword(passwordRecoveryModel = passwordRecoveryModel)
+
+            }
+
+            launch(Dispatchers.Main) {
+                val response = job.await()
+
+//                view?.enableLoading(false)
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }?.let {
+                        view?.showSuccess(message = "Email to reset password successfully sent")
+                        view?.navigateToSignIn()
+                    }
+                        ?: run { view?.showError(message = "Body is null") }
+                } else {
+                    response.errorBody()?.string().takeIf { it != null }?.let {
+                        view?.showError(message = it)
+                    }
+                        ?: run { view?.showError(message = "Unknown Error") }
+                }
+            }
         } else {
-            view.showError(message = result.toString())
+            view?.showError(message = result.toString())
         }
     }
 
     override fun cancelClicked() {
-        view.navigateToSignIn()
+        view?.navigateToSignIn()
     }
 
     override fun navigateToPasswordRecovery() {
-        view.navigateToPasswordRecovery()
+        view?.navigateToPasswordRecovery()
     }
 
     // MARK: - Public Methods
@@ -84,7 +146,7 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol) :
         return null
     }
 
-    private fun signUpModelIsValid(signUpModelWrapper: SignUpModelWrapper): SignModelError? {
+    fun signUpModelIsValid(signUpModelWrapper: SignUpModelWrapper): SignModelError? {
         usernameIsValid(username = signUpModelWrapper.signUpModel.username)?.let {
             return it
         }
@@ -157,6 +219,6 @@ interface LoginActivityModelViewProtocol {
     fun navigateToSignUp()
     fun showError(message: String)
     fun showSuccess(message: String)
-//    fun navigateBack()
+    //    fun navigateBack()
     fun navigateToPasswordRecovery()
 }
