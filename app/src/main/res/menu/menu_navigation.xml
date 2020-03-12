@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/action_topics"
+            android:title="@string/title_top_topics" />
+
+        <item
+            android:id="@+id/action_latest_news"
+            android:title="@string/title_latest_topics" />
+    </group>
+
+</menu>
