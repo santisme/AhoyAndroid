@@ -1,5 +1,6 @@
 package io.santisme.ahoy.sources.login
 
+import android.content.Context
 import io.santisme.ahoy.domain.models.PasswordRecoveryModel
 import io.santisme.ahoy.domain.models.SignInModel
 import io.santisme.ahoy.domain.models.SignUpModelWrapper
@@ -7,8 +8,13 @@ import io.santisme.ahoy.sources.data.repositories.local.LocalRepository
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) :
+class LoginActivityModelView(
+    private val view: LoginActivityModelViewProtocol?,
+    private val context: Context
+) :
     SignInViewControllerDelegate, CoroutineScope {
+
+    private val localRepository = LocalRepository(context = context)
 
     private val job: CompletableJob = Job()
     override val coroutineContext: CoroutineContext
@@ -16,20 +22,30 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
 
     companion object {
         enum class SignModelError(error: String) {
-            usernameEmpty("Username is empty"),
-            invalidEmail("Invalid email"),
-            passwordToShort("Password too short, length must be 10 at least characters"),
-            nonMatchingPasswords("Passwords don't match"),
-            loginEmpty("Login is empty")
+            UsernameEmpty("Username is empty"),
+            InvalidEmail("Invalid email"),
+            PasswordToShort("Password too short, length must be 10 at least characters"),
+            NonMatchingPasswords("Passwords don't match"),
+            LoginEmpty("Login is empty")
         }
     }
 
     override fun onViewCreatedWithNoSavedData() {
-//        if (userRepo.isLogged()) {
-//        view?.launchTopicsActivity()
-//        } else {
-        view?.navigateToSignIn()
-//        }
+        val job = async {
+            localRepository.getLoggedUser()
+        }
+
+        launch(Dispatchers.Main) {
+            val response = job.await()
+
+//                view?.enableLoading(false)
+            if (response != null && response.logged) {
+                view?.launchMainActivity()
+            } else {
+                view?.navigateToSignIn()
+            }
+        }
+
     }
 
     override fun signInClicked(signInModel: SignInModel) {
@@ -38,7 +54,7 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
 //            view?.enableLoading(true)
 
             val job = async {
-                LocalRepository.signIn(signInModel = signInModel)
+                localRepository.signIn(signInModel = signInModel)
 
             }
 
@@ -47,9 +63,16 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
 
 //                view?.enableLoading(false)
                 if (response.isSuccessful) {
-                    response.body().takeIf { it != null }?.let {
-                        //                        LocalRepository.saveSession(signInModel.username)
-                        view?.launchMainActivity()
+                    response.body().takeIf { it != null }?.let { signInResponse ->
+                        signInResponse.user?.let {
+                            localRepository.saveLoggedUser(user = it)
+                            view?.launchMainActivity()
+
+                        }
+
+                        signInResponse.errorType?.let {
+                            view?.showError(message = it)
+                        }
                     }
                         ?: run { view?.showError(message = "Body is null") }
                 } else {
@@ -73,7 +96,7 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
         val result = signUpModelIsValid(signUpModelWrapper = signUpModelWrapper)
         if (result == null) {
             val job = async {
-                LocalRepository.signUp(signUpModel = signUpModelWrapper.signUpModel)
+                localRepository.signUp(signUpModel = signUpModelWrapper.signUpModel)
 
             }
 
@@ -99,7 +122,7 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
         val result = passwordRecoveryModelIsValid(passwordRecoveryModel = passwordRecoveryModel)
         if (result == null) {
             val job = async {
-                LocalRepository.recoverPassword(passwordRecoveryModel = passwordRecoveryModel)
+                localRepository.recoverPassword(passwordRecoveryModel = passwordRecoveryModel)
 
             }
 
@@ -179,35 +202,35 @@ class LoginActivityModelView(private val view: LoginActivityModelViewProtocol?) 
 
     fun usernameIsValid(username: String): SignModelError? {
         if (username.isNullOrEmpty()) {
-            return SignModelError.usernameEmpty
+            return SignModelError.UsernameEmpty
         }
         return null
     }
 
     fun passwordIsValid(password: String): SignModelError? {
         if (password.count() < 10) {
-            return SignModelError.passwordToShort
+            return SignModelError.PasswordToShort
         }
         return null
     }
 
     fun repeatPasswordIsValid(password: String, repeatedPassword: String): SignModelError? {
         if (password != repeatedPassword) {
-            return SignModelError.nonMatchingPasswords
+            return SignModelError.NonMatchingPasswords
         }
         return null
     }
 
     fun emailIsValid(email: String): SignModelError? {
         if (!"""^\w+\@\w+\.{1}\w{2,3}$""".toRegex().matches(email)) {
-            return SignModelError.invalidEmail
+            return SignModelError.InvalidEmail
         }
         return null
     }
 
     fun loginIsValid(login: String): SignModelError? {
         if (login.isNullOrEmpty()) {
-            return SignModelError.loginEmpty
+            return SignModelError.LoginEmpty
         }
         return null
     }
@@ -219,6 +242,7 @@ interface LoginActivityModelViewProtocol {
     fun navigateToSignUp()
     fun showError(message: String)
     fun showSuccess(message: String)
+
     //    fun navigateBack()
     fun navigateToPasswordRecovery()
 }

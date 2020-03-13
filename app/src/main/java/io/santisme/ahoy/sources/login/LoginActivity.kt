@@ -24,7 +24,13 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     SignInFragmentDelegate, SignUpFragmentDelegate, PasswordRecoveryFragmentDelegate {
 
-    private val delegate: SignInViewControllerDelegate by lazy { LoginActivityModelView(view = this) }
+    private val delegate: SignInViewControllerDelegate by lazy {
+        LoginActivityModelView(
+            view = this,
+            context = applicationContext
+        )
+    }
+
     private val signInFragment: SignInFragment by lazy { SignInFragment.newInstance() }
     private val signUpFragment: SignUpFragment by lazy { SignUpFragment.newInstance() }
     private val passwordRecoveryFragment: PasswordRecoveryFragment by lazy { PasswordRecoveryFragment.newInstance() }
@@ -65,13 +71,13 @@ class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
         Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).show()
     }
 
-//    override fun navigateBack() {
-//        supportFragmentManager.popBackStack()
-//    }
-
     override fun navigateToPasswordRecovery() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, passwordRecoveryFragment, PASSWORD_RECOVERY_FRAGMENT_TAG)
+            .replace(
+                R.id.fragmentContainer,
+                passwordRecoveryFragment,
+                PASSWORD_RECOVERY_FRAGMENT_TAG
+            )
             .commit()
     }
 
