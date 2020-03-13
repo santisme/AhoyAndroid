@@ -1,16 +1,20 @@
 package io.santisme.ahoy.sources.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.santisme.ahoy.BuildConfig
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.UserModel
+import io.santisme.ahoy.domain.models.api.UserModel
 import io.santisme.ahoy.sources.data.repositories.local.LocalRepository
+import io.santisme.ahoy.sources.login.LoginActivity
 import io.santisme.ahoy.sources.main.topiclist.TopicListFragment
 import io.santisme.ahoy.sources.main.topiclist.TopicListFragmentDelegate
 import io.santisme.ahoy.sources.main.userdetail.UserDetailFragment
@@ -67,9 +71,9 @@ class MainActivity : AppCompatActivity(), MainActivityModelViewProtocol, TopicLi
         }
 
         if (userModel.moderator != null && userModel.moderator) {
-            labelModerator.setTextColor(resources.getColor(R.color.colorAhoyRuby))
+            labelModerator.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAhoyRuby))
         } else {
-            labelModerator.setTextColor(resources.getColor(R.color.colorAhoyGray))
+            labelModerator.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAhoyGray))
         }
 
         labelNameContent.text = userModel.name
@@ -81,6 +85,22 @@ class MainActivity : AppCompatActivity(), MainActivityModelViewProtocol, TopicLi
 
     override fun requestLoggedUser() {
         delegate.requestLoggedUser()
+    }
+
+    override fun onLogOutClicked() {
+        delegate.onLogOutClicked()
+    }
+
+    override fun launchLoginActivity() {
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    override fun updatePrivateMessages(count: Int) {
+        labelPrivateMessagesCountContent.text = count.toString()
+    }
+
+    override fun showError(message: String) {
+        Snackbar.make(view_pager, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun setupView() {
@@ -127,4 +147,5 @@ class MainActivity : AppCompatActivity(), MainActivityModelViewProtocol, TopicLi
 
 interface MainActivityDelegate {
     fun requestLoggedUser()
+    fun onLogOutClicked()
 }

@@ -1,7 +1,7 @@
 package io.santisme.ahoy
 
-import io.santisme.ahoy.domain.models.SignUpModel
-import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.domain.models.local.SignUpModel
+import io.santisme.ahoy.domain.models.local.SignUpModelWrapper
 import io.santisme.ahoy.sources.data.repositories.local.LocalRepository
 import io.santisme.ahoy.sources.login.LoginActivityModelView
 import junit.framework.Assert.assertNotNull
@@ -18,8 +18,24 @@ class SignUpTests {
 
     @Before
     fun setUp() {
-        dummySignUpModel = SignUpModelWrapper(signUpModel = SignUpModel(name =  "dummyName", email = "dummyEmail@email.com", password = "1234567890", username = "dummyUsername"), repeatedPassword = "1234567890")
-        wrongSignUpModel = SignUpModelWrapper(  signUpModel = SignUpModel(name =     "dummyName",  email = "dummyEmail.com", password = "123", username = ""), repeatedPassword = "12")
+        dummySignUpModel =
+            SignUpModelWrapper(
+                signUpModel = SignUpModel(
+                    name = "dummyName",
+                    email = "dummyEmail@email.com",
+                    password = "1234567890",
+                    username = "dummyUsername"
+                ), repeatedPassword = "1234567890"
+            )
+        wrongSignUpModel =
+            SignUpModelWrapper(
+                signUpModel = SignUpModel(
+                    name = "dummyName",
+                    email = "dummyEmail.com",
+                    password = "123",
+                    username = ""
+                ), repeatedPassword = "12"
+            )
         val signUpRepository = LocalRepository ()
         loginActivityModelView = LoginActivityModelView(view = null)
     }

@@ -11,7 +11,6 @@ data class UserEntity(
     @ColumnInfo(name = "moderator") val moderator: Boolean,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "username") val username: String?
-//    @ColumnInfo(name = "poster") val poster: List<PosterEntity>?
 
 )
 

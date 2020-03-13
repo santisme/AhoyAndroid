@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.snackbar.Snackbar
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.PasswordRecoveryModel
-import io.santisme.ahoy.domain.models.SignInModel
-import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.local.SignInModel
+import io.santisme.ahoy.domain.models.local.SignUpModelWrapper
 import io.santisme.ahoy.sources.login.passwordrecovery.PASSWORD_RECOVERY_FRAGMENT_TAG
 import io.santisme.ahoy.sources.login.passwordrecovery.PasswordRecoveryFragment
 import io.santisme.ahoy.sources.login.passwordrecovery.PasswordRecoveryFragmentDelegate
@@ -46,8 +46,7 @@ class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     }
 
     override fun launchMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 

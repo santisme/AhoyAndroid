@@ -1,6 +1,6 @@
 package io.santisme.ahoy
 
-import io.santisme.ahoy.domain.models.SignInModel
+import io.santisme.ahoy.domain.models.local.SignInModel
 import io.santisme.ahoy.sources.login.LoginActivityModelView
 import org.junit.After
 import org.junit.Assert.assertNotNull
@@ -21,8 +21,14 @@ class SignInTests {
 
     @Before
     fun setUp() {
-        dummySignInModel = SignInModel(username = "dummyUsername", password = "1234567890")
-        wrongSignInModel = SignInModel(username = "", password = "123")
+        dummySignInModel = SignInModel(
+            username = "dummyUsername",
+            password = "1234567890"
+        )
+        wrongSignInModel = SignInModel(
+            username = "",
+            password = "123"
+        )
         loginActivityModelView = LoginActivityModelView(view = null)
     }
 

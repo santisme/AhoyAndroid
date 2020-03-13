@@ -1,4 +1,4 @@
-package io.santisme.ahoy.domain.models
+package io.santisme.ahoy.domain.models.local
 
 import org.json.JSONObject
 

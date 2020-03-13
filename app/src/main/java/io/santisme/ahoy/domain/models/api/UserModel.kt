@@ -1,6 +1,5 @@
-package io.santisme.ahoy.domain.models
+package io.santisme.ahoy.domain.models.api
 
-import android.widget.ImageView
 import com.google.gson.annotations.SerializedName
 
 data class UserModel(
@@ -12,5 +11,3 @@ data class UserModel(
     @SerializedName("moderator") val moderator: Boolean?,
     @SerializedName("logged") val logged: Boolean
 )
-
-data class UserModelWrapper(val userModel: UserModel, val userAvatarImage: ImageView?)

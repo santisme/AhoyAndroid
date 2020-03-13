@@ -1,6 +1,6 @@
 package io.santisme.ahoy.domain.requests
 
-import io.santisme.ahoy.domain.models.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
 import io.santisme.ahoy.domain.responses.PasswordRecoveryResponse
 import retrofit2.Response
 import retrofit2.http.Body

@@ -1,11 +1,13 @@
 package io.santisme.ahoy.sources.login
 
 import android.content.Context
-import io.santisme.ahoy.domain.models.PasswordRecoveryModel
-import io.santisme.ahoy.domain.models.SignInModel
-import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.local.SignInModel
+import io.santisme.ahoy.domain.models.local.SignUpModelWrapper
 import io.santisme.ahoy.sources.data.repositories.local.LocalRepository
 import kotlinx.coroutines.*
+import retrofit2.HttpException
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 class LoginActivityModelView(
@@ -21,12 +23,12 @@ class LoginActivityModelView(
         get() = job + Dispatchers.IO
 
     companion object {
-        enum class SignModelError(error: String) {
-            UsernameEmpty("Username is empty"),
-            InvalidEmail("Invalid email"),
-            PasswordToShort("Password too short, length must be 10 at least characters"),
-            NonMatchingPasswords("Passwords don't match"),
-            LoginEmpty("Login is empty")
+        enum class SignModelError {
+            UsernameEmpty,
+            InvalidEmail,
+            PasswordToShort,
+            NonMatchingPasswords,
+            LoginEmpty
         }
     }
 
@@ -59,24 +61,38 @@ class LoginActivityModelView(
             }
 
             launch(Dispatchers.Main) {
-                val response = job.await()
+                try {
+                    val response = job.await()
 
 //                view?.enableLoading(false)
-                if (response.isSuccessful) {
-                    response.body().takeIf { it != null }?.let { signInResponse ->
-                        signInResponse.user?.let {
-                            localRepository.saveLoggedUser(user = it)
-                            view?.launchMainActivity()
+                    if (response.isSuccessful) {
+                        response.body().takeIf { it != null }?.let { signInResponse ->
+                            signInResponse.user?.let {
+                                localRepository.saveLoggedUser(user = it)
+                                view?.launchMainActivity()
 
-                        }
+                            }
 
-                        signInResponse.errorType?.let {
-                            view?.showError(message = it)
+                            signInResponse.errorType?.let {
+                                view?.showError(message = it)
+                            }
                         }
+                            ?: run { view?.showError(message = "Body is null") }
+                    } else {
+                        view?.showError(message = "Username ${signInModel.username} not found")
                     }
-                        ?: run { view?.showError(message = "Body is null") }
-                } else {
-                    view?.showError(message = "Username ${signInModel.username} not found")
+                } catch (error: HttpException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: IOException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: Throwable) {
+                    error.printStackTrace()
+                    view?.showError(message = "Ooops: Something went wrong ${error.message}")
+
                 }
             }
         } else {
@@ -101,16 +117,31 @@ class LoginActivityModelView(
             }
 
             launch(Dispatchers.Main) {
-                val response = job.await()
+                try {
+                    val response = job.await()
 
 //                view?.enableLoading(false)
-                if (response.isSuccessful) {
-                    response.body().takeIf { it != null }?.let {
-                        view?.navigateToSignIn()
+                    if (response.isSuccessful) {
+                        response.body().takeIf { it != null }?.let {
+                            view?.navigateToSignIn()
+                        }
+                            ?: run { view?.showError(message = "Body is null") }
+                    } else {
+                        view?.showError(message = response.message().toString())
                     }
-                        ?: run { view?.showError(message = "Body is null") }
-                } else {
-                    view?.showError(message = response.message().toString())
+
+                } catch (error: HttpException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: IOException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: Throwable) {
+                    error.printStackTrace()
+                    view?.showError(message = "Ooops: Something went wrong ${error.message}")
+
                 }
             }
         } else {
@@ -127,20 +158,34 @@ class LoginActivityModelView(
             }
 
             launch(Dispatchers.Main) {
-                val response = job.await()
+                try {
+                    val response = job.await()
 
 //                view?.enableLoading(false)
-                if (response.isSuccessful) {
-                    response.body().takeIf { it != null }?.let {
-                        view?.showSuccess(message = "Email to reset password successfully sent")
-                        view?.navigateToSignIn()
+                    if (response.isSuccessful) {
+                        response.body().takeIf { it != null }?.let {
+                            view?.showSuccess(message = "Email to reset password successfully sent")
+                            view?.navigateToSignIn()
+                        }
+                            ?: run { view?.showError(message = "Body is null") }
+                    } else {
+                        response.errorBody()?.string().takeIf { it != null }?.let {
+                            view?.showError(message = it)
+                        }
+                            ?: run { view?.showError(message = "Unknown Error") }
                     }
-                        ?: run { view?.showError(message = "Body is null") }
-                } else {
-                    response.errorBody()?.string().takeIf { it != null }?.let {
-                        view?.showError(message = it)
-                    }
-                        ?: run { view?.showError(message = "Unknown Error") }
+                } catch (error: HttpException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: IOException) {
+                    error.printStackTrace()
+                    view?.showError(message = "Network connection error")
+
+                } catch (error: Throwable) {
+                    error.printStackTrace()
+                    view?.showError(message = "Ooops: Something went wrong ${error.message}")
+
                 }
             }
         } else {

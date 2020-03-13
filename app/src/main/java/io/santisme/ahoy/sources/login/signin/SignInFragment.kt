@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.SignInModel
+import io.santisme.ahoy.domain.models.local.SignInModel
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 const val SIGN_IN_FRAGMENT_TAG = "SIGN_IN_FRAGMENT"
