@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.SignUpModel
-import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.domain.models.local.SignUpModel
+import io.santisme.ahoy.domain.models.local.SignUpModelWrapper
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 const val SIGN_UP_FRAGMENT_TAG = "SIGN_UP_FRAGMENT"

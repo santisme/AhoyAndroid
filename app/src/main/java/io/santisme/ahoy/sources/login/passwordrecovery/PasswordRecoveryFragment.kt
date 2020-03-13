@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
 import kotlinx.android.synthetic.main.fragment_password_recovery.*
 
 const val PASSWORD_RECOVERY_FRAGMENT_TAG = "PASSWORD_RECOVERY_FRAGMENT_TAG"
@@ -15,7 +15,9 @@ const val PASSWORD_RECOVERY_FRAGMENT_TAG = "PASSWORD_RECOVERY_FRAGMENT_TAG"
 class PasswordRecoveryFragment : Fragment() {
     private lateinit var delegate: PasswordRecoveryFragmentDelegate
     private val passwordRecoveryModel: PasswordRecoveryModel
-        get() = PasswordRecoveryModel(login = inputLogin?.text?.toString() ?: "")
+        get() = PasswordRecoveryModel(
+            login = inputLogin?.text?.toString() ?: ""
+        )
 
     companion object {
         fun newInstance() =

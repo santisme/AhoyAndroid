@@ -42,10 +42,16 @@ class UserDetailFragment() : Fragment() {
     private fun setupView() {
         delegate.requestLoggedUser()
 
+        buttonLogOut.setOnClickListener{ onLogOutClicked() }
+    }
+
+    private fun onLogOutClicked() {
+        delegate.onLogOutClicked()
     }
 
 }
 
 interface UserDetailFragmentDelegate {
     fun requestLoggedUser()
+    fun onLogOutClicked()
 }

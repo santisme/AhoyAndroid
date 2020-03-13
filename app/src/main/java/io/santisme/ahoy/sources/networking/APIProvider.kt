@@ -9,13 +9,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+
 object APIProvider {
 
-    val retrofit: Retrofit = Retrofit.Builder()
-        .client(provideOkHttpClient())
-        .baseUrl("https://${BuildConfig.DiscourseDomain}")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    val retrofit: Retrofit
+        get() = Retrofit.Builder()
+            .client(provideOkHttpClient())
+            .baseUrl("https://${BuildConfig.DiscourseDomain}")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
     private fun provideOkHttpClient(): OkHttpClient {
         val interceptor = object : Interceptor {
