@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.snackbar.Snackbar
 import io.santisme.ahoy.R
-import io.santisme.ahoy.domain.models.PasswordRecoveryModel
-import io.santisme.ahoy.domain.models.SignInModel
-import io.santisme.ahoy.domain.models.SignUpModelWrapper
+import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
+import io.santisme.ahoy.domain.models.local.SignInModel
+import io.santisme.ahoy.domain.models.local.SignUpModelWrapper
 import io.santisme.ahoy.sources.login.passwordrecovery.PASSWORD_RECOVERY_FRAGMENT_TAG
 import io.santisme.ahoy.sources.login.passwordrecovery.PasswordRecoveryFragment
 import io.santisme.ahoy.sources.login.passwordrecovery.PasswordRecoveryFragmentDelegate
@@ -24,7 +24,13 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     SignInFragmentDelegate, SignUpFragmentDelegate, PasswordRecoveryFragmentDelegate {
 
-    private val delegate: SignInViewControllerDelegate by lazy { LoginActivityModelView(view = this) }
+    private val delegate: SignInViewControllerDelegate by lazy {
+        LoginActivityModelView(
+            view = this,
+            context = applicationContext
+        )
+    }
+
     private val signInFragment: SignInFragment by lazy { SignInFragment.newInstance() }
     private val signUpFragment: SignUpFragment by lazy { SignUpFragment.newInstance() }
     private val passwordRecoveryFragment: PasswordRecoveryFragment by lazy { PasswordRecoveryFragment.newInstance() }
@@ -40,8 +46,7 @@ class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     }
 
     override fun launchMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
@@ -65,13 +70,13 @@ class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
         Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).show()
     }
 
-//    override fun navigateBack() {
-//        supportFragmentManager.popBackStack()
-//    }
-
     override fun navigateToPasswordRecovery() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, passwordRecoveryFragment, PASSWORD_RECOVERY_FRAGMENT_TAG)
+            .replace(
+                R.id.fragmentContainer,
+                passwordRecoveryFragment,
+                PASSWORD_RECOVERY_FRAGMENT_TAG
+            )
             .commit()
     }
 

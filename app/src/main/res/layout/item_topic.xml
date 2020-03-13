@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemTopic"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelTitle"
+        tools:text="Just Now" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iconPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/labelPosts"
+        app:layout_constraintEnd_toStartOf="@+id/iconViews"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/ic_posts"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iconViews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/iconPosts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/labelPosts"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/ic_views"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/iconPosts"
+        app:layout_constraintEnd_toEndOf="@+id/iconPosts"
+        app:layout_constraintTop_toBottomOf="@id/iconPosts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="512"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/labelViews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/iconViews"
+        app:layout_constraintEnd_toEndOf="@+id/iconViews"
+        app:layout_constraintTop_toBottomOf="@id/iconViews"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="512"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

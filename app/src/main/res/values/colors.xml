@@ -8,4 +8,6 @@
     <color name="colorAhoyGrayDark">#8E8E93</color>
     <color name="colorAhoyMainText">#090909</color>
     <color name="colorAhoyMainTextDark">#FAFAFA</color>
+    <color name="colorAhoyGroupView">#14747480</color>
+    <color name="colorAhoyGreen">#00CC33</color>
 </resources>
