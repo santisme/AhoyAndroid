@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/toolbarTopicsToolbar"
+    android:id="@+id/toolbarPostsToolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorAhoyPrimary"
@@ -11,32 +12,31 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_topic_detail">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/activityTopicsToolbarTitle"
+            android:id="@+id/activityPostsToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/toolbar_topics_margin_top"
             android:text="@string/app_name"
             android:textSize="@dimen/toolbar_topics_title_size"
             android:textStyle="bold"
-            android:textColor="@color/colorAhoyMainText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/toolbarTopicsSearchView"
+        <SearchView
+            android:id="@+id/toolbarPostsSearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/activityTopicsToolbarTitle" />
+            app:layout_constraintTop_toBottomOf="@id/activityPostsToolbarTitle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

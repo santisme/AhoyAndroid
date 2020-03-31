@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".sources.main.MainActivity" />
-
+        <activity android:name=".sources.main.topicdetail.ui.TopicDetailActivity" />
     </application>
 
 </manifest>

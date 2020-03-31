@@ -2,12 +2,8 @@ package io.santisme.ahoy.sources.data.repositories.local
 
 import android.content.Context
 import androidx.room.Room
-import io.santisme.ahoy.domain.database.TopicDatabase
-import io.santisme.ahoy.domain.database.TopicEntity
-import io.santisme.ahoy.domain.database.UserDatabase
-import io.santisme.ahoy.domain.database.UserEntity
-import io.santisme.ahoy.domain.models.api.TopicModel
-import io.santisme.ahoy.domain.models.api.UserModel
+import io.santisme.ahoy.domain.database.*
+import io.santisme.ahoy.domain.models.api.*
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -41,7 +37,8 @@ class DatabaseRepository(private val context: Context) : LocalRepositoryProtocol
 
     override fun insertPrivateMessages(topicList: List<TopicModel>) {
         thread {
-            providePrivateMessageDatabase().topicDao().insertTopics(topicList = topicList.topicModelToEntity())
+            providePrivateMessageDatabase().topicDao()
+                .insertTopics(topicList = topicList.topicModelToEntity())
         }
     }
 
@@ -88,22 +85,111 @@ class DatabaseRepository(private val context: Context) : LocalRepositoryProtocol
             title = title ?: "",
             postsCount = postsCount,
             categoryId = categoryId,
-            createdAt = createdAt ?: Date().toString()
-//            posters = posters.toModel()
+            createdAt = createdAt ?: Date().toString(),
+            posters = null,
+//            posters = posters?.posterEntityToModel(),
+            archetype = archetype,
+            bumped = bumped
+//            postStream = postStream?.toModel(),
+//            topicDetails = topicDetails?.toModel()
         )
 
     private fun List<TopicModel>.topicModelToEntity(): List<TopicEntity> = map { it.toEntity() }
 
     private fun TopicModel.toEntity(): TopicEntity = TopicEntity(
         id = id,
-        views = views,
-        title = title ?: "",
+        views = views ?: 0,
+        title = title,
         postsCount = postsCount,
-        categoryId = categoryId,
-        createdAt = createdAt
-//        posters = posters.toEntity()
+        categoryId = categoryId ?: 0,
+        createdAt = createdAt,
+//        posters = posters?.posterModelToEntity(),
+//        postStream = postStream?.toEntity(),
+        bumped = bumped,
+        archetype = archetype
+//        topicDetails = topicDetails?.toEntity()
     )
 
+    private fun List<PosterEntity>.posterEntityToModel(): List<PosterModel> = map { it.toModel() }
+
+    private fun PosterEntity.toModel(): PosterModel =
+        PosterModel(
+            description = posterDescription ?: "",
+            userId = userId
+        )
+
+    private fun List<PosterModel>.posterModelToEntity(): List<PosterEntity> = map { it.toEntity() }
+
+    private fun PosterModel.toEntity(): PosterEntity =
+        PosterEntity(
+//            id = 0,
+            userId = userId,
+            posterDescription = description
+        )
+
+//    private fun List<PostStreamEntity>.postStreamEntityToModel(): List<PostStreamModel> =
+//        map { it.toModel() }
+//
+//    private fun PostStreamEntity.toModel(): PostStreamModel =
+//        PostStreamModel(
+//            posts = posts?.postEntityToModel() ?: listOf()
+//        )
+//
+//    private fun List<PostStreamModel>.postStreamModelToEntity(): List<PostStreamEntity> =
+//        map { it.toEntity() }
+//
+//    private fun PostStreamModel.toEntity(): PostStreamEntity =
+//        PostStreamEntity(
+////            id = 0,
+//            posts = posts.postModelToEntity()
+//        )
+
+    private fun List<PostEntity>.postEntityToModel(): List<PostModel> = map { it.toModel() }
+
+    private fun PostEntity.toModel(): PostModel =
+        PostModel(
+            id = id,
+            name = name,
+            username = username,
+            avatarTemplate = avatarTemplate,
+            cooked = cooked,
+            blurb = blurb,
+            raw = raw,
+            updatedAt = updatedAt,
+            createdAt = createdAt,
+            topicId = topicId
+        )
+
+    private fun List<PostModel>.postModelToEntity(): List<PostEntity> = map { it.toEntity() }
+
+    private fun PostModel.toEntity(): PostEntity = PostEntity(
+        id = id,
+        name = name,
+        username = username,
+        avatarTemplate = avatarTemplate,
+        cooked = cooked,
+        blurb = blurb,
+        raw = raw,
+        updatedAt = updatedAt,
+        createdAt = createdAt,
+        topicId = topicId
+    )
+
+//    private fun List<TopicDetailsEntity>.topicDetailsEntityToModel(): List<TopicDetailsModel> =
+//        map { it.toModel() }
+//
+//    private fun TopicDetailsEntity.toModel(): TopicDetailsModel =
+//        TopicDetailsModel(
+//            topicCreatedBy = createdBy.user.toModel()
+//        )
+//
+//    private fun List<TopicDetailsModel>.topicDetailsModelToEntity(): List<TopicDetailsEntity> =
+//        map { it.toEntity() }
+//
+//    private fun TopicDetailsModel.toEntity(): TopicDetailsEntity =
+//        TopicDetailsEntity(
+//            createdBy = CreatedByEntity(user = topicCreatedBy.toEntity())
+//        )
 }
 
 // MARK: - Protocol DatabaseRepositoryProtocol definition

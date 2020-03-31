@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "74efbd829cd9f64e182cd74078f4763a",
+    "identityHash": "56a34db49b6433f5a022b21c3afc7a39",
     "entities": [
       {
-        "tableName": "TopicEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `created_at` TEXT, `posts_count` INTEGER NOT NULL, `title` TEXT, `views` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "topic_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `created_at` TEXT, `posts_count` INTEGER NOT NULL, `title` TEXT, `views` INTEGER NOT NULL, `bumped` INTEGER, `archetype` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -43,6 +43,18 @@
             "columnName": "views",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "bumped",
+            "columnName": "bumped",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "archetype",
+            "columnName": "archetype",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -58,7 +70,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74efbd829cd9f64e182cd74078f4763a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '56a34db49b6433f5a022b21c3afc7a39')"
     ]
   }
 }
