@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     SignInFragmentDelegate, SignUpFragmentDelegate, PasswordRecoveryFragmentDelegate {
 
-    private val delegate: SignInViewControllerDelegate by lazy {
+    private val delegate: LoginActivityDelegate by lazy {
         LoginActivityModelView(
             view = this,
             context = applicationContext
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity(), LoginActivityModelViewProtocol,
     }
 }
 
-interface SignInViewControllerDelegate {
+interface LoginActivityDelegate {
     fun onViewCreatedWithNoSavedData()
     fun signInClicked(signInModel: SignInModel)
     fun navigateToSignUp()

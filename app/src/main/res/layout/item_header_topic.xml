@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headerTopic"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/topicTitleLabel"
@@ -91,6 +91,7 @@
         android:textColor="@color/colorAhoyMainText"
         android:textSize="16sp"
         android:textStyle="normal"
+        android:minHeight="128dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iconPosts"
@@ -101,9 +102,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:forceHasOverlappingRendering="true"
-        android:orientation="vertical"
         android:background="@color/colorAhoyGroupView"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topicContentLabel">
@@ -112,7 +112,7 @@
             android:id="@+id/replyButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@color/colorAhoyGroupView"
+            android:background="@color/colorAhoyPrimary"
             android:tint="@color/colorAhoyButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -125,7 +125,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="32dp"
-            android:background="@color/colorAhoyGroupView"
+            android:background="@color/colorAhoyPrimary"
             android:tint="@color/colorAhoyButton"
             app:layout_constraintEnd_toStartOf="@+id/replyButton"
             app:layout_constraintTop_toTopOf="@+id/replyButton"
@@ -136,13 +136,13 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="32dp"
-            android:background="@color/colorAhoyGroupView"
+            android:background="@color/colorAhoyPrimary"
             android:tint="@color/colorAhoyButton"
             app:layout_constraintStart_toEndOf="@+id/replyButton"
             app:layout_constraintTop_toTopOf="@+id/replyButton"
             app:srcCompat="@drawable/ic_share" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/posterList"
             android:layout_width="0dp"
             android:layout_height="70dp"

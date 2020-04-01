@@ -1,6 +1,6 @@
 package io.santisme.ahoy.domain.models.local
 
-import androidx.recyclerview.widget.RecyclerView
+import io.santisme.ahoy.sources.main.topicdetail.adapter.TopicDetailHolderProtocol
 
 data class TopicDetailHeaderModel(
     val topicTitle: String,
@@ -8,5 +8,5 @@ data class TopicDetailHeaderModel(
     val viewCount: Int,
     val updatedAt: String,
     val topicContent: String,
-    val postersRecyclerView: RecyclerView
-)
+    val posterList: List<PosterListModel>
+): TopicDetailHolderProtocol

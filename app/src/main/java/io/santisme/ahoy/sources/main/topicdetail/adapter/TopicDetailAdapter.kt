@@ -7,57 +7,65 @@ import androidx.recyclerview.widget.RecyclerView
 import io.santisme.ahoy.R
 import io.santisme.ahoy.domain.models.local.PostCellModel
 import io.santisme.ahoy.domain.models.local.TopicDetailHeaderModel
+import io.santisme.ahoy.sources.main.topicdetail.viewholder.HeaderHolder
 import io.santisme.ahoy.sources.main.topicdetail.viewholder.PostHolder
 
 class TopicDetailAdapter(
-    private val postClickListener: ((PostCellModel) -> Unit)? = null
-) : RecyclerView.Adapter<PostHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val postList = mutableListOf<PostCellModel>()
-    private lateinit var headerModel: TopicDetailHeaderModel
+    private val postList = mutableListOf<TopicDetailHolderProtocol>()
 
     enum class HolderType(val type: Int) {
         Header(0),
         Item(1)
     }
 
-    private val listener: ((View) -> Unit) = {
-        val topic = it.tag as PostCellModel
-        postClickListener?.invoke(topic)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
-        val view = when(viewType) {
-            HolderType.Header.type -> inflateHeaderHolder(parent = parent)
-            else -> inflatePostHolder(parent = parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            HolderType.Header.type -> HeaderHolder(inflateHeaderHolder(parent = parent))
+            HolderType.Item.type -> PostHolder(inflatePostHolder(parent = parent))
+            else -> throw RuntimeException("No match for $viewType.")
         }
-        return PostHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return postList.size
+        return postList.count()
     }
 
-    override fun onBindViewHolder(holder: PostHolder, position: Int) {
-        val post = postList[position]
-        holder.post = post
-        holder.itemView.setOnClickListener(listener)
+    override fun getItemViewType(position: Int): Int {
+        return when (position) {
+            HolderType.Header.type -> HolderType.Header.type
+            else -> HolderType.Item.type
+        }
     }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is HeaderHolder) {
+            holder.header = postList[position] as TopicDetailHeaderModel
+        } else if (holder is PostHolder) {
+            holder.post = postList[position] as PostCellModel
+        }
+    }
+
+    // MARK: - Public Methods
+    fun setTopicDetail(postList: List<PostCellModel>, headerModel: TopicDetailHeaderModel) {
+//        this.headerModel = headerModel
+        this.postList.clear()
+        this.postList.add(headerModel)
+        this.postList.addAll(postList)
+        notifyDataSetChanged()
+    }
+
+    // MARK: - Private Methods
     private fun inflateHeaderHolder(parent: ViewGroup): View {
-        return LayoutInflater.from(parent.context).inflate(R.layout.item_header_topic, parent, false)
+        return LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_header_topic, parent, false)
     }
-
 
     private fun inflatePostHolder(parent: ViewGroup): View {
         return LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
     }
 
-    private fun setTopicDetail(headerModel: TopicDetailHeaderModel, postList: List<PostCellModel>) {
-        this.headerModel = headerModel
-        this.postList.clear()
-        this.postList.addAll(postList)
-        notifyDataSetChanged()
-    }
-
 }
+
+interface TopicDetailHolderProtocol {}

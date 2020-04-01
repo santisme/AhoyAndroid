@@ -71,15 +71,29 @@ class MainActivityModelView(
         }
 
         launch(Dispatchers.Main) {
-            val response = job.await()
+            try {
+                val response = job.await()
 
 //                view?.enableLoading(false)
-            if (response.isSuccessful) {
-                response.body().takeIf { it != null }?.let {
-                    updateTopicListCellModelWith(response = it)
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }?.let {
+                        updateTopicListCellModelWith(response = it)
+                    }
+                } else {
+                    view?.showError(message = "Error fetching latest topics")
                 }
-            } else {
-                view?.showError(message = "Error fetching latest topics")
+            } catch (error: HttpException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
+
+            } catch (error: IOException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
+
+            } catch (error: Throwable) {
+                error.printStackTrace()
+                view?.showError(message = "Ooops: Something went wrong ${error.message}")
+
             }
         }
 
@@ -91,15 +105,29 @@ class MainActivityModelView(
         }
 
         launch(Dispatchers.Main) {
-            val response = job.await()
+            try {
+                val response = job.await()
 
 //                view?.enableLoading(false)
-            if (response.isSuccessful) {
-                response.body().takeIf { it != null }?.let {
-                    updateTopicListCellModelWith(response = it)
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }?.let {
+                        updateTopicListCellModelWith(response = it)
+                    }
+                } else {
+                    view?.showError(message = "Error fetching top topics")
                 }
-            } else {
-                view?.showError(message = "Error fetching top topics")
+            } catch (error: HttpException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
+
+            } catch (error: IOException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
+
+            } catch (error: Throwable) {
+                error.printStackTrace()
+                view?.showError(message = "Ooops: Something went wrong ${error.message}")
+
             }
         }
     }
@@ -171,57 +199,71 @@ class MainActivityModelView(
         var logged: Boolean
 
         launch(Dispatchers.Main) {
-            val response = job.await()
+            try {
+                val response = job.await()
 //            view?.enableLoading(false)
-            if (response != null) {
+                if (response != null) {
 
-                id = response.id
-                username = response.username
-                name = response.name
-                avatarTemplate = response.avatarTemplate
-                response.lastSeenAt?.let {
+                    id = response.id
+                    username = response.username
+                    name = response.name
+                    avatarTemplate = response.avatarTemplate
+                    response.lastSeenAt?.let {
 
-                    val timeOffset = TimeOffsetRepository.getTimeOffset(it)
-                    val quantityString = when (timeOffset.unit) {
-                        Calendar.YEAR -> R.plurals.years
-                        Calendar.MONTH -> R.plurals.months
-                        Calendar.DAY_OF_MONTH -> R.plurals.days
-                        Calendar.HOUR -> R.plurals.hours
-                        Calendar.MINUTE -> R.plurals.minutes
-                        else -> R.plurals.years
+                        val timeOffset = TimeOffsetRepository.getTimeOffset(it)
+                        val quantityString = when (timeOffset.unit) {
+                            Calendar.YEAR -> R.plurals.years
+                            Calendar.MONTH -> R.plurals.months
+                            Calendar.DAY_OF_MONTH -> R.plurals.days
+                            Calendar.HOUR -> R.plurals.hours
+                            Calendar.MINUTE -> R.plurals.minutes
+                            else -> R.plurals.years
+                        }
+
+                        lastSeenAt = if (timeOffset.amount != 0) {
+                            context.resources.getQuantityString(
+                                quantityString,
+                                timeOffset.amount,
+                                timeOffset.amount
+                            )
+                        } else {
+                            context.resources.getString(R.string.minutes_zero)
+                        }
+
                     }
 
-                    lastSeenAt = if (timeOffset.amount != 0) {
-                        context.resources.getQuantityString(
-                            quantityString,
-                            timeOffset.amount,
-                            timeOffset.amount
-                        )
-                    } else {
-                        context.resources.getString(R.string.minutes_zero)
-                    }
+                    moderator = response.moderator
+                    logged = response.logged
 
+                    userDetailModel = UserDetailModel(
+                        id = id,
+                        username = username,
+                        name = name,
+                        avatarTemplate = avatarTemplate,
+                        lastSeenAt = lastSeenAt,
+                        moderator = moderator,
+                        logged = logged
+                    )
+
+                    requestPrivateMessagesByUser(username = username)
+
+                    view?.updateUserDetailModel(userDetailModel = userDetailModel)
+
+                } else {
+                    print("No logged user found")
                 }
+            } catch (error: HttpException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
 
-                moderator = response.moderator
-                logged = response.logged
+            } catch (error: IOException) {
+                error.printStackTrace()
+                view?.showError(message = "Network connection error")
 
-                userDetailModel = UserDetailModel(
-                    id = id,
-                    username = username,
-                    name = name,
-                    avatarTemplate = avatarTemplate,
-                    lastSeenAt = lastSeenAt,
-                    moderator = moderator,
-                    logged = logged
-                )
+            } catch (error: Throwable) {
+                error.printStackTrace()
+                view?.showError(message = "Ooops: Something went wrong ${error.message}")
 
-                requestPrivateMessagesByUser(username = username)
-
-                view?.updateUserDetailModel(userDetailModel = userDetailModel)
-
-            } else {
-                print("No logged user found")
             }
         }
 
