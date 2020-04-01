@@ -178,7 +178,20 @@ class LocalRepository(private val context: Context) : SignInRepositoryProtocol,
             return APIProvider.retrofit.create(TopTopicsRequest::class.java)
                 .fetchTopTopics(headerUsername = BuildConfig.DiscourseAdmin)
         } catch (error: Exception) {
-            Log.e("FETCH_TOP_TOPICS", "Error fetching top topics from remote API")
+            Log.e("FETCH_SINGLE_TOPIC", "Error fetching top topics from remote API")
+            with(error) {
+                printStackTrace()
+                throw this
+            }
+        }
+    }
+
+    override suspend fun fetchSingleTopic(topicId: Int): Response<SingleTopicResponse> {
+        try {
+            return APIProvider.retrofit.create(SingleTopicRequest::class.java)
+                .fetchSingleTopic(topicId = topicId, headerUsername = BuildConfig.DiscourseAdmin)
+        } catch (error: Exception) {
+            Log.e("FETCH_TOP_TOPICS", "Error fetching single topic from remote API")
             with(error) {
                 printStackTrace()
                 throw this

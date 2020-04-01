@@ -5,10 +5,11 @@ import androidx.recyclerview.widget.RecyclerView
 import io.santisme.ahoy.R
 import io.santisme.ahoy.domain.models.local.TopicDetailHeaderModel
 import io.santisme.ahoy.sources.additions.TimeOffsetRepository
+import io.santisme.ahoy.sources.main.topicdetail.adapter.TopicDetailHolderProtocol
 import kotlinx.android.synthetic.main.item_header_topic.view.*
 import java.util.*
 
-class HeaderHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
+class HeaderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var header: TopicDetailHeaderModel? = null
         set(value) {
             field = value
@@ -18,7 +19,8 @@ class HeaderHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
                     topicTitleLabel.text = it.topicTitle
                     labelPosts.text = it.postsCount.toString()
                     labelViews.text = it.viewCount.toString()
-                    setTimeOffset(io.santisme.ahoy.sources.additions.TimeOffsetRepository.getTimeOffset(it.updatedAt))
+                    topicContentLabel.text = it.topicContent
+                    setTimeOffset(TimeOffsetRepository.getTimeOffset(it.updatedAt))
                 }
             }
         }

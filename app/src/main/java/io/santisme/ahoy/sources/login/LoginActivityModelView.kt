@@ -14,7 +14,7 @@ class LoginActivityModelView(
     private val view: LoginActivityModelViewProtocol?,
     private val context: Context
 ) :
-    SignInViewControllerDelegate, CoroutineScope {
+    LoginActivityDelegate, CoroutineScope {
 
     private val localRepository = LocalRepository(context = context)
 
