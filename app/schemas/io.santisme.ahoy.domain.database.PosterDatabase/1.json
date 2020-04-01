@@ -2,30 +2,36 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "82e0221c14019042040127b8d322d322",
+    "identityHash": "d12bd97a000918d174e8ae2106b0d449",
     "entities": [
       {
-        "tableName": "PosterEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER, `poster_description` TEXT, PRIMARY KEY(`userId`))",
+        "tableName": "poster_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `poster_description` TEXT, `user_id` INTEGER)",
         "fields": [
           {
-            "fieldPath": "userId",
-            "columnName": "userId",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "posterDescription",
             "columnName": "poster_description",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "userId"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -34,7 +40,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '82e0221c14019042040127b8d322d322')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd12bd97a000918d174e8ae2106b0d449')"
     ]
   }
 }

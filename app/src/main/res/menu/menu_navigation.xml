@@ -3,12 +3,12 @@
 
     <group>
         <item
-            android:id="@+id/action_topics"
-            android:title="@string/title_top_topics" />
+            android:id="@+id/action_latest_topics"
+            android:title="@string/title_latest_topics" />
 
         <item
-            android:id="@+id/action_latest_news"
-            android:title="@string/title_latest_topics" />
+            android:id="@+id/action_top_topics"
+            android:title="@string/title_top_topics" />
     </group>
 
 </menu>

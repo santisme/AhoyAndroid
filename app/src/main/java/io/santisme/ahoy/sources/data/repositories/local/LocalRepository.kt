@@ -3,27 +3,22 @@ package io.santisme.ahoy.sources.data.repositories.local
 import android.content.Context
 import android.util.Log
 import io.santisme.ahoy.BuildConfig
-import io.santisme.ahoy.domain.database.TopicEntity
 import io.santisme.ahoy.domain.models.api.TopicModel
 import io.santisme.ahoy.domain.models.api.UserModel
 import io.santisme.ahoy.domain.models.local.PasswordRecoveryModel
 import io.santisme.ahoy.domain.models.local.SignInModel
 import io.santisme.ahoy.domain.models.local.SignUpModel
-import io.santisme.ahoy.domain.requests.PasswordRecoveryRequest
-import io.santisme.ahoy.domain.requests.PrivateMessagesRequestByUser
-import io.santisme.ahoy.domain.requests.SignInRequest
-import io.santisme.ahoy.domain.requests.SignUpRequest
+import io.santisme.ahoy.domain.models.local.UserDetailModel
+import io.santisme.ahoy.domain.requests.*
 import io.santisme.ahoy.domain.responses.*
-import io.santisme.ahoy.sources.data.repositories.protocols.PasswordRecoveryProtocol
-import io.santisme.ahoy.sources.data.repositories.protocols.PrivateMessagesProtocol
-import io.santisme.ahoy.sources.data.repositories.protocols.SignInRepositoryProtocol
-import io.santisme.ahoy.sources.data.repositories.protocols.SignUpRepositoryProtocol
+import io.santisme.ahoy.sources.data.repositories.protocols.*
 import io.santisme.ahoy.sources.networking.APIProvider
 import retrofit2.Response
 
 class LocalRepository(private val context: Context) : SignInRepositoryProtocol,
     SignUpRepositoryProtocol,
-    PasswordRecoveryProtocol, DatabaseRepositoryProtocol, PrivateMessagesProtocol {
+    PasswordRecoveryProtocol, DatabaseRepositoryProtocol, PrivateMessagesProtocol,
+    TopicRepositoryProtocol {
 
     val database: LocalRepositoryProtocol = DatabaseRepository(context = context)
 
@@ -141,8 +136,8 @@ class LocalRepository(private val context: Context) : SignInRepositoryProtocol,
         return database.fetchLoggedUser()
     }
 
-    fun logOutUser(userModel: UserModel) {
-        val loggedOutUserModel = with(userModel) {
+    fun logOutUser(userDetailModel: UserDetailModel) {
+        val loggedOutUserModel = with(userDetailModel) {
             UserModel(
                 id = id,
                 username = username,
@@ -154,6 +149,41 @@ class LocalRepository(private val context: Context) : SignInRepositoryProtocol,
             )
         }
         updateUser(user = loggedOutUserModel)
+    }
+
+    override suspend fun fetchLatestTopics(
+        order: TopicsOrder?,
+        ascending: Boolean?,
+        page: Int?
+    ): Response<TopicListResponse> {
+        try {
+            return APIProvider.retrofit.create(LatestTopicsRequest::class.java)
+                .fetchLatestTopics(
+                    headerUsername = BuildConfig.DiscourseAdmin,
+                    order = order,
+                    ascending = ascending,
+                    page = page
+                )
+        } catch (error: Exception) {
+            Log.e("FETCH_LATEST_TOPICS", "Error fetching latest topics from remote API")
+            with(error) {
+                printStackTrace()
+                throw this
+            }
+        }
+    }
+
+    override suspend fun fetchTopTopics(): Response<TopicListResponse> {
+        try {
+            return APIProvider.retrofit.create(TopTopicsRequest::class.java)
+                .fetchTopTopics(headerUsername = BuildConfig.DiscourseAdmin)
+        } catch (error: Exception) {
+            Log.e("FETCH_TOP_TOPICS", "Error fetching top topics from remote API")
+            with(error) {
+                printStackTrace()
+                throw this
+            }
+        }
     }
 
 }
