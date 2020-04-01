@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
+    android:fillViewport="true"
     tools:context=".sources.login.LoginActivity">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,11 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp"
-                app:srcCompat="@drawable/ic_3balloonsligth" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                app:srcCompat="@drawable/ic_3balloons_light" />
 
                 <FrameLayout
                     android:id="@+id/fragmentContainer"
@@ -42,10 +34,6 @@
                     layout="@layout/view_loading"
                     android:visibility="invisible" />
 
-            </FrameLayout>
-
         </LinearLayout>
 
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>
